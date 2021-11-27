@@ -1,0 +1,695 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled14.ipynb",
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyObnNKZR1Dc72t9yTZfA1Tu",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/hadi1421/twitter-sentiment-analysis/blob/master/model%20trained%20fully%20Fyp\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "resources": {
+            "http://localhost:8080/nbextensions/google.colab/files.js": {
+              "data": "Ly8gQ29weXJpZ2h0IDIwMTcgR29vZ2xlIExMQwovLwovLyBMaWNlbnNlZCB1bmRlciB0aGUgQXBhY2hlIExpY2Vuc2UsIFZlcnNpb24gMi4wICh0aGUgIkxpY2Vuc2UiKTsKLy8geW91IG1heSBub3QgdXNlIHRoaXMgZmlsZSBleGNlcHQgaW4gY29tcGxpYW5jZSB3aXRoIHRoZSBMaWNlbnNlLgovLyBZb3UgbWF5IG9idGFpbiBhIGNvcHkgb2YgdGhlIExpY2Vuc2UgYXQKLy8KLy8gICAgICBodHRwOi8vd3d3LmFwYWNoZS5vcmcvbGljZW5zZXMvTElDRU5TRS0yLjAKLy8KLy8gVW5sZXNzIHJlcXVpcmVkIGJ5IGFwcGxpY2FibGUgbGF3IG9yIGFncmVlZCB0byBpbiB3cml0aW5nLCBzb2Z0d2FyZQovLyBkaXN0cmlidXRlZCB1bmRlciB0aGUgTGljZW5zZSBpcyBkaXN0cmlidXRlZCBvbiBhbiAiQVMgSVMiIEJBU0lTLAovLyBXSVRIT1VUIFdBUlJBTlRJRVMgT1IgQ09ORElUSU9OUyBPRiBBTlkgS0lORCwgZWl0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZC4KLy8gU2VlIHRoZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFuZAovLyBsaW1pdGF0aW9ucyB1bmRlciB0aGUgTGljZW5zZS4KCi8qKgogKiBAZmlsZW92ZXJ2aWV3IEhlbHBlcnMgZm9yIGdvb2dsZS5jb2xhYiBQeXRob24gbW9kdWxlLgogKi8KKGZ1bmN0aW9uKHNjb3BlKSB7CmZ1bmN0aW9uIHNwYW4odGV4dCwgc3R5bGVBdHRyaWJ1dGVzID0ge30pIHsKICBjb25zdCBlbGVtZW50ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnc3BhbicpOwogIGVsZW1lbnQudGV4dENvbnRlbnQgPSB0ZXh0OwogIGZvciAoY29uc3Qga2V5IG9mIE9iamVjdC5rZXlzKHN0eWxlQXR0cmlidXRlcykpIHsKICAgIGVsZW1lbnQuc3R5bGVba2V5XSA9IHN0eWxlQXR0cmlidXRlc1trZXldOwogIH0KICByZXR1cm4gZWxlbWVudDsKfQoKLy8gTWF4IG51bWJlciBvZiBieXRlcyB3aGljaCB3aWxsIGJlIHVwbG9hZGVkIGF0IGEgdGltZS4KY29uc3QgTUFYX1BBWUxPQURfU0laRSA9IDEwMCAqIDEwMjQ7CgpmdW5jdGlvbiBfdXBsb2FkRmlsZXMoaW5wdXRJZCwgb3V0cHV0SWQpIHsKICBjb25zdCBzdGVwcyA9IHVwbG9hZEZpbGVzU3RlcChpbnB1dElkLCBvdXRwdXRJZCk7CiAgY29uc3Qgb3V0cHV0RWxlbWVudCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKG91dHB1dElkKTsKICAvLyBDYWNoZSBzdGVwcyBvbiB0aGUgb3V0cHV0RWxlbWVudCB0byBtYWtlIGl0IGF2YWlsYWJsZSBmb3IgdGhlIG5leHQgY2FsbAogIC8vIHRvIHVwbG9hZEZpbGVzQ29udGludWUgZnJvbSBQeXRob24uCiAgb3V0cHV0RWxlbWVudC5zdGVwcyA9IHN0ZXBzOwoKICByZXR1cm4gX3VwbG9hZEZpbGVzQ29udGludWUob3V0cHV0SWQpOwp9CgovLyBUaGlzIGlzIHJvdWdobHkgYW4gYXN5bmMgZ2VuZXJhdG9yIChub3Qgc3VwcG9ydGVkIGluIHRoZSBicm93c2VyIHlldCksCi8vIHdoZXJlIHRoZXJlIGFyZSBtdWx0aXBsZSBhc3luY2hyb25vdXMgc3RlcHMgYW5kIHRoZSBQeXRob24gc2lkZSBpcyBnb2luZwovLyB0byBwb2xsIGZvciBjb21wbGV0aW9uIG9mIGVhY2ggc3RlcC4KLy8gVGhpcyB1c2VzIGEgUHJvbWlzZSB0byBibG9jayB0aGUgcHl0aG9uIHNpZGUgb24gY29tcGxldGlvbiBvZiBlYWNoIHN0ZXAsCi8vIHRoZW4gcGFzc2VzIHRoZSByZXN1bHQgb2YgdGhlIHByZXZpb3VzIHN0ZXAgYXMgdGhlIGlucHV0IHRvIHRoZSBuZXh0IHN0ZXAuCmZ1bmN0aW9uIF91cGxvYWRGaWxlc0NvbnRpbnVlKG91dHB1dElkKSB7CiAgY29uc3Qgb3V0cHV0RWxlbWVudCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKG91dHB1dElkKTsKICBjb25zdCBzdGVwcyA9IG91dHB1dEVsZW1lbnQuc3RlcHM7CgogIGNvbnN0IG5leHQgPSBzdGVwcy5uZXh0KG91dHB1dEVsZW1lbnQubGFzdFByb21pc2VWYWx1ZSk7CiAgcmV0dXJuIFByb21pc2UucmVzb2x2ZShuZXh0LnZhbHVlLnByb21pc2UpLnRoZW4oKHZhbHVlKSA9PiB7CiAgICAvLyBDYWNoZSB0aGUgbGFzdCBwcm9taXNlIHZhbHVlIHRvIG1ha2UgaXQgYXZhaWxhYmxlIHRvIHRoZSBuZXh0CiAgICAvLyBzdGVwIG9mIHRoZSBnZW5lcmF0b3IuCiAgICBvdXRwdXRFbGVtZW50Lmxhc3RQcm9taXNlVmFsdWUgPSB2YWx1ZTsKICAgIHJldHVybiBuZXh0LnZhbHVlLnJlc3BvbnNlOwogIH0pOwp9CgovKioKICogR2VuZXJhdG9yIGZ1bmN0aW9uIHdoaWNoIGlzIGNhbGxlZCBiZXR3ZWVuIGVhY2ggYXN5bmMgc3RlcCBvZiB0aGUgdXBsb2FkCiAqIHByb2Nlc3MuCiAqIEBwYXJhbSB7c3RyaW5nfSBpbnB1dElkIEVsZW1lbnQgSUQgb2YgdGhlIGlucHV0IGZpbGUgcGlja2VyIGVsZW1lbnQuCiAqIEBwYXJhbSB7c3RyaW5nfSBvdXRwdXRJZCBFbGVtZW50IElEIG9mIHRoZSBvdXRwdXQgZGlzcGxheS4KICogQHJldHVybiB7IUl0ZXJhYmxlPCFPYmplY3Q+fSBJdGVyYWJsZSBvZiBuZXh0IHN0ZXBzLgogKi8KZnVuY3Rpb24qIHVwbG9hZEZpbGVzU3RlcChpbnB1dElkLCBvdXRwdXRJZCkgewogIGNvbnN0IGlucHV0RWxlbWVudCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlucHV0SWQpOwogIGlucHV0RWxlbWVudC5kaXNhYmxlZCA9IGZhbHNlOwoKICBjb25zdCBvdXRwdXRFbGVtZW50ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQob3V0cHV0SWQpOwogIG91dHB1dEVsZW1lbnQuaW5uZXJIVE1MID0gJyc7CgogIGNvbnN0IHBpY2tlZFByb21pc2UgPSBuZXcgUHJvbWlzZSgocmVzb2x2ZSkgPT4gewogICAgaW5wdXRFbGVtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ2NoYW5nZScsIChlKSA9PiB7CiAgICAgIHJlc29sdmUoZS50YXJnZXQuZmlsZXMpOwogICAgfSk7CiAgfSk7CgogIGNvbnN0IGNhbmNlbCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2J1dHRvbicpOwogIGlucHV0RWxlbWVudC5wYXJlbnRFbGVtZW50LmFwcGVuZENoaWxkKGNhbmNlbCk7CiAgY2FuY2VsLnRleHRDb250ZW50ID0gJ0NhbmNlbCB1cGxvYWQnOwogIGNvbnN0IGNhbmNlbFByb21pc2UgPSBuZXcgUHJvbWlzZSgocmVzb2x2ZSkgPT4gewogICAgY2FuY2VsLm9uY2xpY2sgPSAoKSA9PiB7CiAgICAgIHJlc29sdmUobnVsbCk7CiAgICB9OwogIH0pOwoKICAvLyBXYWl0IGZvciB0aGUgdXNlciB0byBwaWNrIHRoZSBmaWxlcy4KICBjb25zdCBmaWxlcyA9IHlpZWxkIHsKICAgIHByb21pc2U6IFByb21pc2UucmFjZShbcGlja2VkUHJvbWlzZSwgY2FuY2VsUHJvbWlzZV0pLAogICAgcmVzcG9uc2U6IHsKICAgICAgYWN0aW9uOiAnc3RhcnRpbmcnLAogICAgfQogIH07CgogIGNhbmNlbC5yZW1vdmUoKTsKCiAgLy8gRGlzYWJsZSB0aGUgaW5wdXQgZWxlbWVudCBzaW5jZSBmdXJ0aGVyIHBpY2tzIGFyZSBub3QgYWxsb3dlZC4KICBpbnB1dEVsZW1lbnQuZGlzYWJsZWQgPSB0cnVlOwoKICBpZiAoIWZpbGVzKSB7CiAgICByZXR1cm4gewogICAgICByZXNwb25zZTogewogICAgICAgIGFjdGlvbjogJ2NvbXBsZXRlJywKICAgICAgfQogICAgfTsKICB9CgogIGZvciAoY29uc3QgZmlsZSBvZiBmaWxlcykgewogICAgY29uc3QgbGkgPSBkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdsaScpOwogICAgbGkuYXBwZW5kKHNwYW4oZmlsZS5uYW1lLCB7Zm9udFdlaWdodDogJ2JvbGQnfSkpOwogICAgbGkuYXBwZW5kKHNwYW4oCiAgICAgICAgYCgke2ZpbGUudHlwZSB8fCAnbi9hJ30pIC0gJHtmaWxlLnNpemV9IGJ5dGVzLCBgICsKICAgICAgICBgbGFzdCBtb2RpZmllZDogJHsKICAgICAgICAgICAgZmlsZS5sYXN0TW9kaWZpZWREYXRlID8gZmlsZS5sYXN0TW9kaWZpZWREYXRlLnRvTG9jYWxlRGF0ZVN0cmluZygpIDoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJ24vYSd9IC0gYCkpOwogICAgY29uc3QgcGVyY2VudCA9IHNwYW4oJzAlIGRvbmUnKTsKICAgIGxpLmFwcGVuZENoaWxkKHBlcmNlbnQpOwoKICAgIG91dHB1dEVsZW1lbnQuYXBwZW5kQ2hpbGQobGkpOwoKICAgIGNvbnN0IGZpbGVEYXRhUHJvbWlzZSA9IG5ldyBQcm9taXNlKChyZXNvbHZlKSA9PiB7CiAgICAgIGNvbnN0IHJlYWRlciA9IG5ldyBGaWxlUmVhZGVyKCk7CiAgICAgIHJlYWRlci5vbmxvYWQgPSAoZSkgPT4gewogICAgICAgIHJlc29sdmUoZS50YXJnZXQucmVzdWx0KTsKICAgICAgfTsKICAgICAgcmVhZGVyLnJlYWRBc0FycmF5QnVmZmVyKGZpbGUpOwogICAgfSk7CiAgICAvLyBXYWl0IGZvciB0aGUgZGF0YSB0byBiZSByZWFkeS4KICAgIGxldCBmaWxlRGF0YSA9IHlpZWxkIHsKICAgICAgcHJvbWlzZTogZmlsZURhdGFQcm9taXNlLAogICAgICByZXNwb25zZTogewogICAgICAgIGFjdGlvbjogJ2NvbnRpbnVlJywKICAgICAgfQogICAgfTsKCiAgICAvLyBVc2UgYSBjaHVua2VkIHNlbmRpbmcgdG8gYXZvaWQgbWVzc2FnZSBzaXplIGxpbWl0cy4gU2VlIGIvNjIxMTU2NjAuCiAgICBsZXQgcG9zaXRpb24gPSAwOwogICAgZG8gewogICAgICBjb25zdCBsZW5ndGggPSBNYXRoLm1pbihmaWxlRGF0YS5ieXRlTGVuZ3RoIC0gcG9zaXRpb24sIE1BWF9QQVlMT0FEX1NJWkUpOwogICAgICBjb25zdCBjaHVuayA9IG5ldyBVaW50OEFycmF5KGZpbGVEYXRhLCBwb3NpdGlvbiwgbGVuZ3RoKTsKICAgICAgcG9zaXRpb24gKz0gbGVuZ3RoOwoKICAgICAgY29uc3QgYmFzZTY0ID0gYnRvYShTdHJpbmcuZnJvbUNoYXJDb2RlLmFwcGx5KG51bGwsIGNodW5rKSk7CiAgICAgIHlpZWxkIHsKICAgICAgICByZXNwb25zZTogewogICAgICAgICAgYWN0aW9uOiAnYXBwZW5kJywKICAgICAgICAgIGZpbGU6IGZpbGUubmFtZSwKICAgICAgICAgIGRhdGE6IGJhc2U2NCwKICAgICAgICB9LAogICAgICB9OwoKICAgICAgbGV0IHBlcmNlbnREb25lID0gZmlsZURhdGEuYnl0ZUxlbmd0aCA9PT0gMCA/CiAgICAgICAgICAxMDAgOgogICAgICAgICAgTWF0aC5yb3VuZCgocG9zaXRpb24gLyBmaWxlRGF0YS5ieXRlTGVuZ3RoKSAqIDEwMCk7CiAgICAgIHBlcmNlbnQudGV4dENvbnRlbnQgPSBgJHtwZXJjZW50RG9uZX0lIGRvbmVgOwoKICAgIH0gd2hpbGUgKHBvc2l0aW9uIDwgZmlsZURhdGEuYnl0ZUxlbmd0aCk7CiAgfQoKICAvLyBBbGwgZG9uZS4KICB5aWVsZCB7CiAgICByZXNwb25zZTogewogICAgICBhY3Rpb246ICdjb21wbGV0ZScsCiAgICB9CiAgfTsKfQoKc2NvcGUuZ29vZ2xlID0gc2NvcGUuZ29vZ2xlIHx8IHt9OwpzY29wZS5nb29nbGUuY29sYWIgPSBzY29wZS5nb29nbGUuY29sYWIgfHwge307CnNjb3BlLmdvb2dsZS5jb2xhYi5fZmlsZXMgPSB7CiAgX3VwbG9hZEZpbGVzLAogIF91cGxvYWRGaWxlc0NvbnRpbnVlLAp9Owp9KShzZWxmKTsK",
+              "ok": true,
+              "headers": [
+                [
+                  "content-type",
+                  "application/javascript"
+                ]
+              ],
+              "status": 200,
+              "status_text": ""
+            }
+          },
+          "base_uri": "https://localhost:8080/",
+          "height": 73
+        },
+        "id": "wCLLTXuHIsYZ",
+        "outputId": "8961e6ac-17b6-40fb-9086-5cddac221326"
+      },
+      "source": [
+        "from google.colab import files\n",
+        "t=files.upload()"
+      ],
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              "\n",
+              "     <input type=\"file\" id=\"files-f4dbe39e-3cc3-44ae-a2ac-107db98d217d\" name=\"files[]\" multiple disabled\n",
+              "        style=\"border:none\" />\n",
+              "     <output id=\"result-f4dbe39e-3cc3-44ae-a2ac-107db98d217d\">\n",
+              "      Upload widget is only available when the cell has been executed in the\n",
+              "      current browser session. Please rerun this cell to enable.\n",
+              "      </output>\n",
+              "      <script src=\"/nbextensions/google.colab/files.js\"></script> "
+            ],
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ]
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Saving training.csv to training.csv\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 293
+        },
+        "id": "L0qUav31W_CU",
+        "outputId": "a4e51507-e72b-4f50-c2b8-6815f3f77bbc"
+      },
+      "source": [
+        "import pandas as pd,csv\n",
+        "data = pd.read_csv(\"training.csv\" , encoding=\"latin-1\",quoting=csv.QUOTE_NONE, names = ['sentiment','id','date','query','user','tweet','extra']) \n",
+        "data.head()"
+      ],
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>sentiment</th>\n",
+              "      <th>id</th>\n",
+              "      <th>date</th>\n",
+              "      <th>query</th>\n",
+              "      <th>user</th>\n",
+              "      <th>tweet</th>\n",
+              "      <th>extra</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>\"0\"</td>\n",
+              "      <td>\"1467810369\"</td>\n",
+              "      <td>\"Mon Apr 06 22:19:45 PDT 2009\"</td>\n",
+              "      <td>\"NO_QUERY\"</td>\n",
+              "      <td>\"_TheSpecialOne_\"</td>\n",
+              "      <td>\"@switchfoot http://twitpic.com/2y1zl - Awww</td>\n",
+              "      <td>that's a bummer.  You shoulda got David Carr ...</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>\"0\"</td>\n",
+              "      <td>\"1467810672\"</td>\n",
+              "      <td>\"Mon Apr 06 22:19:49 PDT 2009\"</td>\n",
+              "      <td>\"NO_QUERY\"</td>\n",
+              "      <td>\"scotthamilton\"</td>\n",
+              "      <td>\"is upset that he can't update his Facebook by...</td>\n",
+              "      <td>NaN</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>\"0\"</td>\n",
+              "      <td>\"1467810917\"</td>\n",
+              "      <td>\"Mon Apr 06 22:19:53 PDT 2009\"</td>\n",
+              "      <td>\"NO_QUERY\"</td>\n",
+              "      <td>\"mattycus\"</td>\n",
+              "      <td>\"@Kenichan I dived many times for the ball. Ma...</td>\n",
+              "      <td>NaN</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>\"0\"</td>\n",
+              "      <td>\"1467811184\"</td>\n",
+              "      <td>\"Mon Apr 06 22:19:57 PDT 2009\"</td>\n",
+              "      <td>\"NO_QUERY\"</td>\n",
+              "      <td>\"ElleCTF\"</td>\n",
+              "      <td>\"my whole body feels itchy and like its on fire \"</td>\n",
+              "      <td>NaN</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>\"0\"</td>\n",
+              "      <td>\"1467811193\"</td>\n",
+              "      <td>\"Mon Apr 06 22:19:57 PDT 2009\"</td>\n",
+              "      <td>\"NO_QUERY\"</td>\n",
+              "      <td>\"Karoli\"</td>\n",
+              "      <td>\"@nationwideclass no</td>\n",
+              "      <td>it's not behaving at all. i'm mad. why am i h...</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "  sentiment  ...                                              extra\n",
+              "0       \"0\"  ...   that's a bummer.  You shoulda got David Carr ...\n",
+              "1       \"0\"  ...                                                NaN\n",
+              "2       \"0\"  ...                                                NaN\n",
+              "3       \"0\"  ...                                                NaN\n",
+              "4       \"0\"  ...   it's not behaving at all. i'm mad. why am i h...\n",
+              "\n",
+              "[5 rows x 7 columns]"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 2
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "PTyGDtd1W--R",
+        "outputId": "bf1b2f28-c099-43b2-cb40-a4df4566133e"
+      },
+      "source": [
+        "data.sentiment.value_counts()"
+      ],
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "\"4\"    800000\n",
+              "\"0\"    800000\n",
+              "Name: sentiment, dtype: int64"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 3
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "W2_O6xsuW-7N",
+        "outputId": "7142e185-80bf-44b2-9941-ec46246ee60b"
+      },
+      "source": [
+        "# Import stopwords with nltk.\n",
+        "import nltk\n",
+        "nltk.download('stopwords')\n",
+        "nltk.download('wordnet')\n",
+        "from nltk.corpus import stopwords\n",
+        "from nltk.stem import WordNetLemmatizer \n",
+        "stop = stopwords.words('english')\n",
+        "w_tokenizer = nltk.tokenize.WhitespaceTokenizer()\n",
+        "lemmatizer = nltk.stem.WordNetLemmatizer()"
+      ],
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "[nltk_data] Downloading package stopwords to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping corpora/stopwords.zip.\n",
+            "[nltk_data] Downloading package wordnet to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping corpora/wordnet.zip.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "bqa7EOeDW-4L"
+      },
+      "source": [
+        "\n",
+        "data['AfterStopwords'] = data['tweet'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop)]))"
+      ],
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "g39SGCdLW-1B",
+        "outputId": "84515760-99cf-459c-b3f8-7e1953be787b"
+      },
+      "source": [
+        "data['sentiment'] = data['sentiment'].apply(lambda x: 0 if int(x.strip(\"\\\"\")) == 0 else 1)\n",
+        "print(data['sentiment'])"
+      ],
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "0          0\n",
+            "1          0\n",
+            "2          0\n",
+            "3          0\n",
+            "4          0\n",
+            "          ..\n",
+            "1599995    1\n",
+            "1599996    1\n",
+            "1599997    1\n",
+            "1599998    1\n",
+            "1599999    1\n",
+            "Name: sentiment, Length: 1600000, dtype: int64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_z8cyzE7W-zS",
+        "outputId": "bf20291a-e8ec-4b83-a3bd-7593cb5a562f"
+      },
+      "source": [
+        "data.sentiment.value_counts()"
+      ],
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "1    800000\n",
+              "0    800000\n",
+              "Name: sentiment, dtype: int64"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 7
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "l0muuEESW-u3"
+      },
+      "source": [
+        "import string\n",
+        "data['AfterPunctuation'] = data['AfterStopwords'].apply(lambda x:''.join([i for i in x \n",
+        "                                                  if i not in string.punctuation]))\n",
+        "\n",
+        "data['cleaned'] = data['AfterPunctuation'].str.lower()\n",
+        "\n",
+        "def lemmatize_text(text):\n",
+        "    return [lemmatizer.lemmatize(w) for w in w_tokenizer.tokenize(text)]\n",
+        "\n",
+        "data['lemmatized'] = data['cleaned'].apply(lemmatize_text)\n",
+        "\n",
+        "\n",
+        "data[\"final1\"]= data[\"lemmatized\"].str.join(\" \") \n",
+        "\n",
+        "data['final1'] = data['final1'].str.replace('\\d+', '')"
+      ],
+      "execution_count": 8,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 35
+        },
+        "id": "6JTyDQESW-kW",
+        "outputId": "889a3dc5-a968-4381-cd32-1ee69cea05bc"
+      },
+      "source": [
+        "data['final1'][100]"
+      ],
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "string"
+            },
+            "text/plain": [
+              "'body of missing northern calif girl found police found remains missing northern california girl httptrimimji'"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 9
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "YrE--7aFXnH-",
+        "outputId": "854509ab-e68f-4668-a32a-c7334e4ea717"
+      },
+      "source": [
+        "%tensorflow_version 1.x\n",
+        "\n",
+        "\n",
+        "\n",
+        "from keras import backend as K\n",
+        "K.tensorflow_backend._get_available_gpus()\n",
+        "\n",
+        "\n",
+        "from keras.preprocessing.text import Tokenizer\n",
+        "from keras.preprocessing.sequence import pad_sequences\n",
+        "import numpy as np\n",
+        "maxlen = 280\n",
+        "max_words = 40000\n",
+        "tokenizer = Tokenizer(num_words=max_words)\n",
+        "tokenizer.fit_on_texts(data['tweet'])\n",
+        "sequences = tokenizer.texts_to_sequences(data['tweet'])\n",
+        "word_index = tokenizer.word_index\n",
+        "print('Found %s unique tokens.' % len(word_index))\n",
+        "data1 = pad_sequences(sequences, maxlen=maxlen)\n",
+        "print(data1)\n",
+        "def to_one_hot(labels, dimension=2):\n",
+        "    results = np.zeros((len(labels), dimension))\n",
+        "    print(results.shape)\n",
+        "    for i, label in enumerate(labels):\n",
+        "        results[i, label] = 1.\n",
+        "    return results\n",
+        "one_hot_labels = to_one_hot(data['sentiment'])\n",
+        "labels = np.asarray(one_hot_labels)\n",
+        "print('Shape of data tensor:', data.shape)\n",
+        "print('Shape of label tensor:', labels.shape)\n",
+        "indices = np.arange(data1.shape[0])\n",
+        "np.random.shuffle(indices)\n",
+        "data1 = data1[indices]\n",
+        "labels = labels[indices]\n",
+        "\"\"\"x_train = data1[:training_samples]\n",
+        "y_train = labels[:training_samples]\n",
+        "x_val = data1[training_samples: training_samples + validation_samples]\n",
+        "y_val = labels[training_samples: training_samples + validation_samples]\n",
+        "x_test = data1[validation_samples: validation_samples + test_samples]\n",
+        "y_test = labels[validation_samples: validation_samples + test_samples]\"\"\"\n",
+        "\n",
+        "#from sklearn.model_selection import train_test_split\n",
+        "\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(data1, labels, test_size=0.1, random_state=0)\n",
+        "#X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.03, random_state=0)"
+      ],
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "TensorFlow 1.x selected.\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "Using TensorFlow backend.\n"
+          ]
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Found 644735 unique tokens.\n",
+            "[[    0     0     0 ...   131    52   417]\n",
+            " [    0     0     0 ...    39   291  1169]\n",
+            " [    0     0     0 ...    31    12 29506]\n",
+            " ...\n",
+            " [    0     0     0 ...    14    11  2234]\n",
+            " [    0     0     0 ...  5095    53 13214]\n",
+            " [    0     0     0 ...     0   115 19363]]\n",
+            "(1600000, 2)\n",
+            "Shape of data tensor: (1600000, 12)\n",
+            "Shape of label tensor: (1600000, 2)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Y79CdHKSXnEc",
+        "outputId": "db238bd1-50f5-4a42-8601-f42392c91e5b"
+      },
+      "source": [
+        "print(labels.shape)\n",
+        "print(y_test.shape)"
+      ],
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "(1600000, 2)\n",
+            "(160000, 2)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "hYDtTi3sXnB8",
+        "outputId": "7fe48a81-9d58-4038-f1dd-c189f6e1eb86"
+      },
+      "source": [
+        "y_train.shape"
+      ],
+      "execution_count": 12,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(1440000, 2)"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 12
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "qtjqjDnQXnAY",
+        "outputId": "0827f97a-89c6-4386-b5c9-478a03c71a2c"
+      },
+      "source": [
+        "from keras.models import Sequential\n",
+        "from keras.layers import Embedding, Flatten, Dense, Dropout\n",
+        "from keras.layers import Embedding, LSTM\n",
+        "from keras import regularizers\n",
+        "from keras import layers\n",
+        "from keras.layers import Bidirectional\n",
+        "from keras.layers import TimeDistributed\n",
+        "embedding_dim = 300\n",
+        "\n",
+        "model3 = Sequential()\n",
+        "model3.add(Embedding(max_words, embedding_dim, input_length=maxlen))\n",
+        "model3.add(Bidirectional(layers.LSTM(32,return_sequences = True, dropout=0.2,recurrent_dropout=0.2)))\n",
+        "model3.add(layers.GlobalMaxPooling1D())\n",
+        "model3.add(layers.Dense(2, activation='sigmoid'))\n",
+        "model3.compile(optimizer='adam',\n",
+        "              loss='binary_crossentropy',\n",
+        "              metrics=['accuracy'])\n",
+        "model3.summary()\n",
+        "\n",
+        "\n",
+        "\n",
+        "history = model3.fit(X_train, y_train, epochs=4, batch_size=2048, validation_split = 0.1, shuffle=True)\n"
+      ],
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "WARNING:tensorflow:From /tensorflow-1.15.2/python3.7/tensorflow_core/python/ops/resource_variable_ops.py:1630: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.\n",
+            "Instructions for updating:\n",
+            "If using Keras pass *_constraint arguments to layers.\n",
+            "WARNING:tensorflow:From /tensorflow-1.15.2/python3.7/tensorflow_core/python/ops/nn_impl.py:183: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.\n",
+            "Instructions for updating:\n",
+            "Use tf.where in 2.0, which has the same broadcast rule as np.where\n",
+            "Model: \"sequential_1\"\n",
+            "_________________________________________________________________\n",
+            "Layer (type)                 Output Shape              Param #   \n",
+            "=================================================================\n",
+            "embedding_1 (Embedding)      (None, 280, 300)          12000000  \n",
+            "_________________________________________________________________\n",
+            "bidirectional_1 (Bidirection (None, 280, 64)           85248     \n",
+            "_________________________________________________________________\n",
+            "global_max_pooling1d_1 (Glob (None, 64)                0         \n",
+            "_________________________________________________________________\n",
+            "dense_1 (Dense)              (None, 2)                 130       \n",
+            "=================================================================\n",
+            "Total params: 12,085,378\n",
+            "Trainable params: 12,085,378\n",
+            "Non-trainable params: 0\n",
+            "_________________________________________________________________\n",
+            "WARNING:tensorflow:From /tensorflow-1.15.2/python3.7/keras/backend/tensorflow_backend.py:422: The name tf.global_variables is deprecated. Please use tf.compat.v1.global_variables instead.\n",
+            "\n",
+            "Train on 1296000 samples, validate on 144000 samples\n",
+            "Epoch 1/4\n",
+            "1296000/1296000 [==============================] - 9085s 7ms/step - loss: 0.4847 - accuracy: 0.7675 - val_loss: 0.4537 - val_accuracy: 0.7878\n",
+            "Epoch 2/4\n",
+            "1296000/1296000 [==============================] - 9245s 7ms/step - loss: 0.4355 - accuracy: 0.7973 - val_loss: 0.4434 - val_accuracy: 0.7932\n",
+            "Epoch 3/4\n",
+            "1296000/1296000 [==============================] - 9252s 7ms/step - loss: 0.4145 - accuracy: 0.8093 - val_loss: 0.4417 - val_accuracy: 0.7947\n",
+            "Epoch 4/4\n",
+            "1296000/1296000 [==============================] - 9224s 7ms/step - loss: 0.3976 - accuracy: 0.8185 - val_loss: 0.4452 - val_accuracy: 0.7946\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "nRS0YdOOXm6C"
+      },
+      "source": [
+        "from sklearn.metrics import precision_score , recall_score\n",
+        "y_val_pred=model3.predict_classes(X_test)"
+      ],
+      "execution_count": 14,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "yNs79catkd4c",
+        "outputId": "943d4551-f8b3-42de-ac79-ffa4aeb21d79"
+      },
+      "source": [
+        "from sklearn.metrics import accuracy_score\n",
+        "from sklearn.metrics import precision_score\n",
+        "from sklearn.metrics import recall_score\n",
+        "from sklearn.metrics import f1_score\n",
+        "from sklearn.metrics import cohen_kappa_score\n",
+        "from sklearn.metrics import roc_auc_score\n",
+        "from sklearn.metrics import confusion_matrix\n",
+        "\n",
+        "\n",
+        "rounded_labels=np.argmax(y_test, axis=1)\n",
+        "\n",
+        "\n",
+        "# accuracy: (tp + tn) / (p + n)\n",
+        "accuracy = accuracy_score(rounded_labels, y_val_pred)\n",
+        "print('Accuracy: %f' % accuracy)\n",
+        "# precision tp / (tp + fp)\n",
+        "precision = precision_score(rounded_labels, y_val_pred)\n",
+        "print('Precision: %f' %precision)\n",
+        "# recall: tp / (tp + fn)\n",
+        "recall = recall_score(rounded_labels, y_val_pred, average = 'weighted')\n",
+        "print('Recall: %f' %recall)\n",
+        "# f1: 2 tp / (2 tp + fp + fn)\n",
+        "f1 = f1_score(rounded_labels, y_val_pred)\n",
+        "print('F1: %f' %f1)\n",
+        "# accuracy: (tp + tn) / (p + n)"
+      ],
+      "execution_count": 15,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Accuracy: 0.797162\n",
+            "Precision: 0.790947\n",
+            "Recall: 0.797162\n",
+            "F1: 0.800106\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "vHGIq54akeY9"
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
